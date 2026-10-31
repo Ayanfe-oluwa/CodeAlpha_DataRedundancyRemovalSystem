@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataGuard | Redundancy Removal System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>🛡 DataGuard</h2>
+        <p class="brand-subtitle">Data Redundancy System</p>
+
+        <nav>
+            <a href="#dashboard" class="active">Dashboard</a>
+            <a href="#add-record">Add New Record</a>
+            <a href="#records">All Records</a>
+            <a href="/docs" target="_blank">API Documentation</a>
+        </nav>
+
+        <div class="connection">
+            <span class="dot"></span>
+            System Monitoring
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="header">
+            <div>
+                <p class="eyebrow">DATA MANAGEMENT SYSTEM</p>
+                <h1>Dashboard</h1>
+                <p>Monitor, validate and manage your records.</p>
+            </div>
+            <span class="badge">● System Dashboard</span>
+        </header>
+
+        <section id="dashboard">
+            <h2>System Overview</h2>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <p>Total Records</p>
+                    <h2 id="total-records">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Unique Records</p>
+                    <h2 id="unique-records">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Duplicates Detected</p>
+                    <h2 id="duplicate-count">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Potential Conflicts</p>
+                    <h2 id="conflict-count">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <section id="add-record" class="panel">
+            <h2>Submit New Record</h2>
+            <p>Enter record information for validation.</p>
+
+            <form id="record-form">
+                <label>Full Name</label>
+                <input type="text" id="name"
+                    placeholder="Enter full name" required>
+
+                <label>Email Address</label>
+                <input type="email" id="email"
+                    placeholder="Enter email address" required>
+
+                <label>Description</label>
+                <textarea id="description"
+                    placeholder="Enter record description"
+                    required></textarea>
+
+                <button type="submit" id="submit-button">
+                    Validate and Save Record
+                </button>
+            </form>
+
+            <div id="result" hidden></div>
+        </section>
+
+        <section id="records" class="panel">
+            <h2>Stored Records</h2>
+            <p>Records currently available in your database.</p>
+
+            <input type="search" id="search"
+                placeholder="Search records...">
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="records-body">
+                        <tr>
+                            <td colspan="5">Loading records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            DataGuard | Powered by Python, FastAPI and SQLite
+        </footer>
+
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
