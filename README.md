@@ -1,4 +1,6 @@
-# Cloud-Based Data Redundancy Removal System
+# CodeAlpha Task 1:  Cloud-Based Data Redundancy Removal System
+Prepared by: Kolade Ayanfe Samuel
+Student ID: CA/DF1/322525
 
 A Python REST API that validates incoming records, classifies submissions as unique, duplicate, or potential conflict, and prevents duplicate email identifiers from being stored.
 
