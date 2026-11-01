@@ -1,16 +1,21 @@
 
-const API_URL = "";
+// DataGuard Dashboard JavaScript
 
 // Dashboard elements
 const form = document.getElementById("record-form");
 const resultBox = document.getElementById("result");
 const submitButton = document.getElementById("submit-button");
 
-// Track duplicate and conflict attempts in this browser
+// ========================================
+// STATISTICS MANAGEMENT
+// ========================================
+
+// Get saved statistics
 function getCount(key) {
     return Number(localStorage.getItem(key) || 0);
 }
 
+// Update dashboard counters
 function updateCounters() {
     document.getElementById("duplicate-count").textContent =
         getCount("duplicates_detected");
@@ -19,14 +24,61 @@ function updateCounters() {
         getCount("conflicts_detected");
 }
 
-// Display submission results
+// Reset duplicate and conflict statistics
+function resetStatistics() {
+    const confirmed = confirm(
+        "Are you sure you want to reset Duplicate Detected and Potential Conflicts statistics? This will not delete any stored records."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    localStorage.removeItem("duplicates_detected");
+    localStorage.removeItem("conflicts_detected");
+
+    updateCounters();
+
+    showResult(
+        "Detection statistics have been successfully reset. Your stored records remain unchanged.",
+        "success"
+    );
+}
+
+// Add Reset Statistics button to dashboard
+function setupStatisticsControls() {
+    const statsSection = document.querySelector("#dashboard .stats");
+
+    if (!statsSection || document.getElementById("reset-statistics")) {
+        return;
+    }
+
+    const button = document.createElement("button");
+
+    button.id = "reset-statistics";
+    button.type = "button";
+    button.className = "reset-statistics-button";
+    button.textContent = "Reset Statistics";
+
+    button.addEventListener("click", resetStatistics);
+
+    statsSection.insertAdjacentElement("afterend", button);
+}
+
+// ========================================
+// RESULT MESSAGES
+// ========================================
+
 function showResult(message, type) {
     resultBox.textContent = message;
     resultBox.className = type;
     resultBox.hidden = false;
 }
 
-// Check backend connection
+// ========================================
+// BACKEND CONNECTION
+// ========================================
+
 async function checkAPI() {
     const status = document.querySelector(".connection");
 
@@ -46,7 +98,10 @@ async function checkAPI() {
     }
 }
 
-// Safely display text in HTML
+// ========================================
+// HTML SECURITY
+// ========================================
+
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
         "&": "&amp;",
@@ -57,7 +112,10 @@ function escapeHTML(value) {
     })[char]);
 }
 
-// Load database records
+// ========================================
+// LOAD DATABASE RECORDS
+// ========================================
+
 async function loadRecords() {
     try {
         const response = await fetch("/records?limit=500");
@@ -84,7 +142,10 @@ async function loadRecords() {
     updateCounters();
 }
 
-// Display records with Delete buttons
+// ========================================
+// DISPLAY RECORDS
+// ========================================
+
 function displayRecords(records) {
     const tableBody = document.getElementById("records-body");
 
@@ -111,7 +172,10 @@ function displayRecords(records) {
     `).join("");
 }
 
-// Delete a selected record
+// ========================================
+// DELETE SELECTED RECORD
+// ========================================
+
 async function deleteRecord(recordId) {
     const confirmed = confirm(
         `Are you sure you want to permanently delete record ${recordId}?`
@@ -134,7 +198,6 @@ async function deleteRecord(recordId) {
 
         showResult(data.message, "success");
 
-        // Refresh records and dashboard
         await loadRecords();
 
     } catch (error) {
@@ -142,7 +205,10 @@ async function deleteRecord(recordId) {
     }
 }
 
-// Submit and validate a new record
+// ========================================
+// SUBMIT AND VALIDATE NEW RECORD
+// ========================================
+
 form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -205,6 +271,7 @@ form.addEventListener("submit", async function(event) {
                 "POTENTIAL CONFLICT: " + data.message,
                 "conflict"
             );
+
         } else {
             showResult(
                 data.message || "Submission processed.",
@@ -223,7 +290,10 @@ form.addEventListener("submit", async function(event) {
     }
 });
 
-// Search stored records
+// ========================================
+// SEARCH STORED RECORDS
+// ========================================
+
 document.getElementById("search").addEventListener("input", async function() {
     const searchTerm = this.value.toLowerCase();
 
@@ -250,8 +320,12 @@ document.getElementById("search").addEventListener("input", async function() {
     }
 });
 
-// Initialize dashboard
+// ========================================
+// INITIALIZE DASHBOARD
+// ========================================
+
 async function initializeDashboard() {
+    setupStatisticsControls();
     await checkAPI();
     await loadRecords();
 }
